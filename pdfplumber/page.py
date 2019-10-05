@@ -1,3 +1,5 @@
+import unicodedata
+
 from . import utils
 from .table import TableFinder
 from .container import Container
@@ -12,7 +14,7 @@ class Page(Container):
     cached_properties = Container.cached_properties + [ "_layout" ]
     is_original = True
 
-    def __init__(self, pdf, page_obj, page_number=None, initial_doctop=0):
+    def __init__(self, pdf, page_obj, page_number=None, initial_doctop=0, clean_unicode=True):
         self.pdf = pdf
         self.page_obj = page_obj
         self.page_number = page_number
@@ -41,7 +43,12 @@ class Page(Container):
                 max(m[0], m[2]),
                 max(m[1], m[3]),
             ))
-
+        
+        if clean_unicode:
+            has_unicode = any(ord(c['text']) < 128 for c in self.chars)
+            if has_unicode:
+                self.chars = [i.update({'text':unicodedata.normalize(i['text'])}) for i in self.chars]
+        
     def decimalize(self, x):
         return utils.decimalize(x, self.pdf.precision)
 
