@@ -17,13 +17,17 @@ DEFAULT_STROKE = COLORS.RED + (200,)
 DEFAULT_STROKE_WIDTH = 1
 DEFAULT_RESOLUTION = 72
 
-def get_page_image(pdf_path, page_no, resolution):
+def get_page_image(pdf_path, page_no, resolution, remove_alpha=False):
     """
     For kwargs, see http://docs.wand-py.org/en/latest/wand/image.html#wand.image.Image
     """
     page_path = "{0}[{1}]".format(pdf_path, page_no)
     with wand.image.Image(filename=page_path, resolution=resolution) as img:
-        with img.convert("png") as png:
+        conv_type = 'png'
+        if remove_alpha:
+            img.alpha_channel = 'remove'
+            conv_type = 'jpg'
+        with img.convert(conv_type) as png:
             im = PIL.Image.open(BytesIO(png.make_blob()))
             if "transparency" in im.info:
                 converted = im.convert("RGBA").convert("RGB")
@@ -32,13 +36,14 @@ def get_page_image(pdf_path, page_no, resolution):
             return converted
 
 class PageImage(object):
-    def __init__(self, page, original=None, resolution=DEFAULT_RESOLUTION):
+    def __init__(self, page, remove_alpha=False, original=None, resolution=DEFAULT_RESOLUTION):
         self.page = page
         if original == None:
             self.original = get_page_image(
                 page.pdf.stream.name,
                 page.page_number - 1,
-                resolution
+                resolution,
+                remove_alpha
             )
         else:
             self.original = original
