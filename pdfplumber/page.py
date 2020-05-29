@@ -14,7 +14,7 @@ class Page(Container):
     cached_properties = Container.cached_properties + [ "_layout" ]
     is_original = True
 
-    def __init__(self, pdf, page_obj, page_number=None, initial_doctop=0, clean_unicode=True):
+    def __init__(self, pdf, page_obj, page_number=None, initial_doctop=0, clean_unicode=False):
         self.pdf = pdf
         self.page_obj = page_obj
         self.page_number = page_number
