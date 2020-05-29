@@ -23,9 +23,11 @@ def get_page_image(pdf_path, page_no, resolution, remove_alpha=True):
     """
     page_path = "{0}[{1}]".format(pdf_path, page_no)
     with wand.image.Image(filename=page_path, resolution=resolution) as img:
+        conv_type = 'png'
         if remove_alpha:
             img.alpha_channel = 'remove'
-        with img.convert("jpg") as png:
+            conv_type = 'jpg'
+        with img.convert(conv_type) as png:
             im = PIL.Image.open(BytesIO(png.make_blob()))
             if "transparency" in im.info:
                 converted = im.convert("RGBA").convert("RGB")

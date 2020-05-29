@@ -209,7 +209,7 @@ class Page(Container):
         filtered.bbox = self.bbox
         return filtered
 
-    def to_image(self, resolution=None, remove_alpha=True):
+    def to_image(self, resolution=None, remove_alpha=False):
         """
         For conversion_kwargs, see http://docs.wand-py.org/en/latest/wand/image.html#wand.image.Image
         """
