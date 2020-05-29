@@ -17,7 +17,7 @@ DEFAULT_STROKE = COLORS.RED + (200,)
 DEFAULT_STROKE_WIDTH = 1
 DEFAULT_RESOLUTION = 72
 
-def get_page_image(pdf_path, page_no, resolution, remove_alpha=True):
+def get_page_image(pdf_path, page_no, resolution, remove_alpha=False):
     """
     For kwargs, see http://docs.wand-py.org/en/latest/wand/image.html#wand.image.Image
     """
@@ -36,7 +36,7 @@ def get_page_image(pdf_path, page_no, resolution, remove_alpha=True):
             return converted
 
 class PageImage(object):
-    def __init__(self, page, remove_alpha=True, original=None, resolution=DEFAULT_RESOLUTION):
+    def __init__(self, page, remove_alpha=False, original=None, resolution=DEFAULT_RESOLUTION):
         self.page = page
         if original == None:
             self.original = get_page_image(
